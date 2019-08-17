@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - ./code:/code
+      - ./nginx_app.conf:/etc/nginx/conf.d/default.conf
+  php:
+    image: bitnami/php-fpm:7.2-prod 
+    volumes:
+      - ./code:/code
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 5s
+        order: start-first
+      restart_policy:
+        condition: on-failure    
